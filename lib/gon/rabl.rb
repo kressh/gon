@@ -54,9 +54,12 @@ class Gon
         original_formats = controller.formats
         controller.formats = [:json]
         view_context = controller.view_context
+        original_format = view_context.lookup_context.rendered_format
+        view_context.lookup_context.rendered_format = :json
         locals.each { |k, v| view_context.assigns[k.to_s] = v }
         output = RablRails::Library.instance.get_rendered_template(source, view_context)
         controller.formats = original_formats
+        view_context.lookup_context.rendered_format = original_format
         JSON.parse(output)
       end
 
